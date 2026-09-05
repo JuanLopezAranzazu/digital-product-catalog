@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/authRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
+import productRoutes from "./routes/productRoutes";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,7 @@ app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/products", productRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Ruta no encontrada." });
