@@ -1,21 +1,44 @@
-import { Button } from "@/components/ui/button"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { PublicLayout } from "@/components/layout/PublicLayout"
+import { AdminLayout } from "@/components/layout/AdminLayout"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
+import { CatalogPage } from "@/pages/CatalogPage"
+import { ProductDetailPage } from "@/pages/ProductDetailPage"
+import { LoginPage } from "@/pages/admin/LoginPage"
+import { ProductsPage } from "@/pages/admin/ProductsPage"
+import { CategoriesPage } from "@/pages/admin/CategoriesPage"
 
-export function App() {
+import { AuthProvider } from "@/context/AuthContext"
+
+export default function App() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* Público */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<CatalogPage />} />
+            <Route path="/products/:slug" element={<ProductDetailPage />} />
+          </Route>
+
+          {/* Admin */}
+          <Route path="/admin/login" element={<LoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="products" replace />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="categories" element={<CategoriesPage />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
-
-export default App
