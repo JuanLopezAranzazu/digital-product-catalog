@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAdminToken, AdminTokenPayload } from "../utils/jwt";
+import { verifyAdminToken, AdminTokenPayload } from "../utils/jwt.js";
 
 export interface AuthedRequest extends Request {
   admin?: AdminTokenPayload;

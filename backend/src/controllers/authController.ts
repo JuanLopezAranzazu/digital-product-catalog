@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { prisma } from "../lib/prisma";
-import { signAdminToken } from "../utils/jwt";
-import { AuthedRequest } from "../middleware/auth";
+import { prisma } from "../lib/prisma.js";
+import { signAdminToken } from "../utils/jwt.js";
+import { AuthedRequest } from "../middleware/auth.js";
 
 const loginSchema = z.object({
   email: z.string().email("Ingresa un correo válido."),

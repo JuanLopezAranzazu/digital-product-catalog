@@ -7,9 +7,9 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-} from "../controllers/productController";
-import { requireAdmin } from "../middleware/auth";
-import { uploadProductImages, MAX_PRODUCT_IMAGES } from "../middleware/upload";
+} from "../controllers/productController.js";
+import { requireAdmin } from "../middleware/auth.js";
+import { uploadProductImages, MAX_PRODUCT_IMAGES } from "../middleware/upload.js";
 
 const router = Router();
 

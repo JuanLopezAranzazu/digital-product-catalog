@@ -4,8 +4,8 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
-} from "../controllers/categoryController";
-import { requireAdmin } from "../middleware/auth";
+} from "../controllers/categoryController.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 

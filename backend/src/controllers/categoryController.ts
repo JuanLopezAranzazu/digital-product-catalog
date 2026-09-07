@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { z } from "zod";
 import slugify from "slugify";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 const categorySchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),

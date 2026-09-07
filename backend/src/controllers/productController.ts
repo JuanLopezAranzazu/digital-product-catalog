@@ -3,9 +3,9 @@ import fs from "fs";
 import path from "path";
 import { z } from "zod";
 import slugify from "slugify";
-import { prisma } from "../lib/prisma";
-import { AuthedRequest } from "../middleware/auth";
-import { PRODUCTS_UPLOAD_DIR, MAX_PRODUCT_IMAGES } from "../middleware/upload";
+import { prisma } from "../lib/prisma.js";
+import { AuthedRequest } from "../middleware/auth.js";
+import { PRODUCTS_UPLOAD_DIR, MAX_PRODUCT_IMAGES } from "../middleware/upload.js";
 
 const productImagePublicPath = (filename: string) => `/uploads/products/${filename}`;
 
