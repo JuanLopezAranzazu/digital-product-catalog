@@ -6,7 +6,7 @@ import type {
   AdminUser,
 } from "@/types"
 
-const API_BASE = "/api"
+const API_URL = `${import.meta.env.VITE_API_URL}/api` || "http://localhost:4000/api"
 const TOKEN_KEY = "catalog_admin_token"
 
 export function getToken() {
@@ -32,7 +32,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     headers.set("Authorization", `Bearer ${token}`)
   }
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers })
+  const res = await fetch(`${API_URL}${path}`, { ...options, headers })
 
   if (res.status === 204) {
     return undefined as T

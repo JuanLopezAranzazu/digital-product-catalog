@@ -10,6 +10,8 @@ import { CategoriesPage } from "@/pages/admin/CategoriesPage"
 
 import { AuthProvider } from "@/context/AuthContext"
 
+import { Toaster } from "@/components/ui/toast"
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -39,6 +41,8 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
+
+      <Toaster />
     </BrowserRouter>
   )
 }
