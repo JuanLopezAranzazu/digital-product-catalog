@@ -32,6 +32,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 
@@ -46,6 +54,8 @@ export function ProductsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     fetchCategories()
@@ -87,21 +97,20 @@ export function ProductsPage() {
     setDialogOpen(true)
   }
 
-  async function handleDelete(product: Product) {
-    const confirmed = window.confirm(
-      `¿Eliminar "${product.name}"? Esta acción no se puede deshacer.`
-    )
+  async function confirmDelete() {
+    if (!deleteTarget) return
 
-    if (!confirmed) return
+    setIsDeleting(true)
 
     try {
-      await adminDeleteProduct(product.id)
+      await adminDeleteProduct(deleteTarget.id)
 
       toast.add({
         title: "Producto eliminado",
-        description: `"${product.name}" se quitó del catálogo.`,
+        description: `"${deleteTarget.name}" se quitó del catálogo.`,
       })
 
+      setDeleteTarget(null)
       loadProducts()
     } catch (err) {
       toast.add({
@@ -110,6 +119,8 @@ export function ProductsPage() {
           err instanceof Error ? err.message : "Ocurrió un error inesperado.",
         type: "error",
       })
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -262,7 +273,7 @@ export function ProductsPage() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleDelete(product)}
+                          onClick={() => setDeleteTarget(product)}
                           aria-label={`Eliminar ${product.name}`}
                           className="hover:bg-destructive/10 hover:text-destructive"
                         >
@@ -289,6 +300,34 @@ export function ProductsPage() {
         product={editingProduct}
         onSaved={loadProducts}
       />
+
+      {/* Delete confirmation dialog */}
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(v) => !v && setDeleteTarget(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Eliminar producto</DialogTitle>
+            <DialogDescription>
+              ¿Seguro que quieres eliminar <strong>{deleteTarget?.name}</strong>
+              ? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={confirmDelete}
+            >
+              {isDeleting ? "Eliminando..." : "Eliminar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

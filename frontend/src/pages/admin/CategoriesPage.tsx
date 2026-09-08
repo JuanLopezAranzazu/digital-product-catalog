@@ -15,6 +15,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 
@@ -23,6 +31,8 @@ export function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Category | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   function loadCategories() {
     setIsLoading(true)
@@ -46,21 +56,20 @@ export function CategoriesPage() {
     setDialogOpen(true)
   }
 
-  async function handleDelete(category: Category) {
-    const confirmed = window.confirm(
-      `¿Eliminar la categoría "${category.name}"?`
-    )
+  async function confirmDelete() {
+    if (!deleteTarget) return
 
-    if (!confirmed) return
+    setIsDeleting(true)
 
     try {
-      await adminDeleteCategory(category.id)
+      await adminDeleteCategory(deleteTarget.id)
 
       toast.add({
         title: "Categoría eliminada",
-        description: `"${category.name}" se quitó del catálogo.`,
+        description: `"${deleteTarget.name}" se quitó del catálogo.`,
       })
 
+      setDeleteTarget(null)
       loadCategories()
     } catch (err) {
       toast.add({
@@ -69,6 +78,8 @@ export function CategoriesPage() {
           err instanceof Error ? err.message : "Ocurrió un error inesperado.",
         type: "error",
       })
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -141,7 +152,7 @@ export function CategoriesPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDelete(category)}
+                        onClick={() => setDeleteTarget(category)}
                         aria-label={`Eliminar ${category.name}`}
                         className="hover:bg-destructive/10 hover:text-destructive"
                       >
@@ -163,6 +174,34 @@ export function CategoriesPage() {
         category={editingCategory}
         onSaved={loadCategories}
       />
+
+      {/* Delete confirmation dialog */}
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(v) => !v && setDeleteTarget(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Eliminar categoría</DialogTitle>
+            <DialogDescription>
+              ¿Seguro que quieres eliminar <strong>{deleteTarget?.name}</strong>
+              ? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={confirmDelete}
+            >
+              {isDeleting ? "Eliminando..." : "Eliminar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
