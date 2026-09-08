@@ -1,10 +1,8 @@
 import { ImageOff } from "lucide-react";
 import { Link } from "react-router-dom";
-
 import type { Product } from "@/types";
-
 import { formatPrice } from "@/lib/format";
-
+import {resolveImageUrl} from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -18,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative aspect-square w-full overflow-hidden rounded-md bg-muted">
         {cover ? (
           <img
-            src={cover.url}
+            src={resolveImageUrl(cover.url)}
             alt={product.name}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"

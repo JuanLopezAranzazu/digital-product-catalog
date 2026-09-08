@@ -4,7 +4,7 @@ import { ArrowLeft, ImageOff } from "lucide-react"
 
 import type { Product } from "@/types"
 
-import { fetchProductBySlug } from "@/lib/api"
+import { fetchProductBySlug, resolveImageUrl } from "@/lib/api"
 import { formatPrice } from "@/lib/format"
 
 import { Badge } from "@/components/ui/badge"
@@ -83,7 +83,7 @@ export function ProductDetailPage() {
           <div className="aspect-square w-full overflow-hidden rounded-md bg-muted">
             {images[activeImage] ? (
               <img
-                src={images[activeImage].url}
+                src={resolveImageUrl(images[activeImage].url)}
                 alt={product.name}
                 className="h-full w-full object-cover"
               />
@@ -111,7 +111,7 @@ export function ProductDetailPage() {
                   )}
                 >
                   <img
-                    src={img.url}
+                    src={resolveImageUrl(img.url)}
                     alt=""
                     className="h-full w-full object-cover"
                   />

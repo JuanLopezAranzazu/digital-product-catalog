@@ -6,7 +6,9 @@ import type {
   AdminUser,
 } from "@/types"
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api` || "http://localhost:4000/api"
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000"
+const API_URL = `${API_BASE}/api`
+
 const TOKEN_KEY = "catalog_admin_token"
 
 export function getToken() {
@@ -176,4 +178,10 @@ export function adminUpdateProduct(
 
 export function adminDeleteProduct(id: string): Promise<void> {
   return request(`/products/${id}`, { method: "DELETE" })
+}
+
+/** Construye la URL absoluta para una imagen servida por el backend (ej. /uploads/products/x.jpg) */
+export function resolveImageUrl(url: string) {
+  if (url.startsWith("http")) return url;
+  return `${API_BASE}${url}`;
 }
